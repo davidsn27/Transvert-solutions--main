@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - Transvert Solutions</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-light: #f3f4f6;
+            --glass-bg: rgba(255,255,255,0.35);
+            --glass-border: rgba(255,255,255,0.4);
+            --text-dark: #1f2937;
+            --sidebar: #111827;
+            --sidebar-hover: #1f2937;
+            --accent: #2563eb;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--bg-light);
+            margin: 0;
+        }
+
+        .main-wrapper {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: row-reverse; /* Sidebar a la derecha */
+        }
+
+        /* SIDEBAR A LA DERECHA */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar);
+            padding: 25px;
+            color: #fff;
+            box-shadow: -4px 0 12px rgba(0,0,0,0.25);
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            font-size: 22px;
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px;
+            color: #fff;
+            border-radius: 10px;
+            background: #1f2937;
+            margin-bottom: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: .2s;
+        }
+
+        .sidebar a:hover {
+            background: var(--sidebar-hover);
+        }
+
+        /* CONTENIDO */
+        .content-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .card {
+            width: 550px;
+            background: var(--glass-bg);
+            border-radius: 25px;
+            padding: 35px;
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.15);
+        }
+
+        .card-title {
+            font-size: 28px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .card-text {
+            font-size: 18px;
+            margin-bottom: 18px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="main-wrapper">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h3>Transvert</h3>
+        <a href="{% url 'index' %}"><i class="fas fa-home"></i> Inicio</a>
+        <a href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
+        <a href="{% url 'register' %}"><i class="fas fa-user-plus"></i> Registrarse</a>
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="content-area">
+
+        <div class="card">
+
+            <h2 class="card-title mb-4">
+                <i class="fas fa-envelope"></i> Contáctanos
+            </h2>
+
+            <p class="card-text">
+                <i class="fas fa-phone"></i>
+                <strong>Teléfono:</strong> +57 310 000 0000
+            </p>
+
+            <p class="card-text">
+                <i class="fas fa-envelope"></i>
+                <strong>Correo:</strong> transvert.solutions.enterprice@gmail.com
+            </p>
+
+            <p class="card-text">
+                <i class="fas fa-map-marker-alt"></i>
+                <strong>Dirección:</strong> Bogotá, Colombia
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

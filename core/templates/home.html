@@ -1,0 +1,367 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <title>Home - Transvert Solutions</title>
+
+    <style>
+        /* --- ESTILOS ORIGINALES DE TU PROYECTO --- */
+        .corporate-header {
+            background: #111827;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        
+        .user-menu-container {
+            position: absolute;
+            top: 32px;
+            right: 30px;
+            z-index: 1000; /* Incrementado para asegurar visibilidad */
+        }
+        
+        .user-btn {
+            background: #1f2937;
+            color: white;
+            padding: 14px 26px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 1px solid #4b5563;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            margin-top: 12px;
+            background: #1f2937;
+            padding: 18px;
+            border-radius: 12px;
+            width: 260px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+            z-index: 1000;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 14px;
+            color: white;
+            border-bottom: 1px solid #374151;
+            text-decoration: none;
+            font-size: 17px;
+        }
+        
+        .user-dropdown a:hover {
+            background: #374151;
+        }
+        
+        .user-dropdown.show {
+            display: block;
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 35px;
+        }
+    
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            min-height: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border-left: 8px solid #3b82f6;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    
+        .card h2 {
+            color: #1e3a8a;
+            font-size: 28px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+    
+        .card p {
+            font-size: 20px;
+            line-height: 1.7;
+            color: #111827;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+    
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+            .card {
+                min-height: auto;
+                padding: 25px;
+            }
+        }
+        
+        /* --- ESTILOS DEL CHATBOT --- */
+        #chatbot {
+            position:fixed;
+            bottom:20px;
+            right:20px;
+            background:#112d4e;
+            padding:15px;
+            border-radius:12px;
+            width:280px; /* Un poco más ancho */
+            color:white;
+            box-shadow:0 0 15px rgba(0,0,0,0.5);
+            z-index: 990; /* Para que quede debajo del menú desplegable */
+        }
+
+        #chat {
+            height:250px; /* Más alto para ver el historial */
+            overflow-y:auto;
+            overflow-x:hidden;
+            margin-bottom:10px;
+            padding: 5px;
+            border: 1px solid #374151;
+            border-radius: 5px;
+            background: #1f2937;
+            font-size: 14px;
+        }
+        
+        #chat p {
+            margin: 4px 0;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        #chat b {
+            font-weight: bold;
+        }
+
+        #chat .user-message {
+            text-align: right;
+            background-color: #3b82f6; /* Azul */
+            color: white;
+            margin-left: 20%;
+        }
+
+        #chat .bot-message {
+            text-align: left;
+            background-color: #4b5563; /* Gris */
+            color: white;
+            margin-right: 20%;
+        }
+
+        #msg {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background: white;
+            color: #111827;
+        }
+
+        #send-btn {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            background: #3b82f6; /* Azul */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        #send-btn:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+
+<body>
+    {% csrf_token %}
+
+    <div class="user-menu-container">
+        {% if user.is_authenticated %}
+            <button class="user-btn" onclick="toggleUserMenu()">👤 {{ user.username }}</button>
+
+            <div class="user-dropdown" id="userDropdown">
+                <a href="{% url 'seguimiento_envio' %}">📦 Seguimiento</a>
+                <a href="{% url 'crear_envio' %}">🚚 Crear Envío</a>
+                <a href="/soporte/">🛠 Soporte Técnico</a>
+                <a href="{% url 'logout' %}">🚪 Cerrar Sesión</a>
+            </div>
+
+        {% else %}
+            <button class="user-btn" onclick="toggleUserMenu()">☰ Menú</button>
+
+            <div class="user-dropdown" id="userDropdown">
+                <a href="{% url 'seguimiento_envio' %}">📦 Seguimiento</a>
+                <a href="{% url 'register' %}">📝 Registrarse</a>
+                <a href="{% url 'login' %}">🔐 Iniciar Sesión</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="corporate-header">
+        Transvert Solutions
+    </div>
+
+    <main>
+        <div class="card">
+            <h2>¿Quiénes Somos?</h2>
+            <p>
+                Transvert Solutions es una empresa colombiana dedicada al transporte,
+                logística y gestión inteligente de envíos a nivel nacional.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Misión</h2>
+            <p>
+                Brindar soluciones logísticas innovadoras que optimicen tiempos y
+                garanticen un servicio seguro y eficiente.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Visión</h2>
+            <p>
+                Ser líderes nacionales en servicios de transporte y logística,
+                reconocidos por nuestra calidad y tecnología.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Valores</h2>
+            <p>
+                • Responsabilidad<br>
+                • Innovación<br>
+                • Transparencia<br>
+                • Servicio al cliente<br>
+                • Seguridad
+            </p>
+        </div>
+    </main>
+
+    <div id="chatbot">
+        <div id="chat">
+            <p class="bot-message"><b>Bot:</b> ¡Hola! Soy el asistente de Transvert Solutions. ¿En qué puedo ayudarte hoy?</p>
+        </div>
+        <input id="msg" placeholder="Escribe aquí..." onkeypress="if(event.key === 'Enter') responder()">
+        <button id="send-btn" onclick="responder()">Enviar</button>
+    </div>
+
+    <script>
+        function toggleUserMenu() {
+            document.getElementById("userDropdown").classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-btn')) {
+                var dropdown = document.getElementById("userDropdown");
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        }
+    </script>
+    
+    <script>
+        // Función para obtener el token CSRF necesario para las peticiones POST de Django
+        function getCsrfToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]').value;
+        }
+
+        async function responder() {
+            const chatBox = document.getElementById("chat");
+            const inputMsg = document.getElementById("msg");
+            const sendBtn = document.getElementById("send-btn");
+            const userPrompt = inputMsg.value.trim();
+
+            if (userPrompt === "") {
+                return;
+            }
+
+            // 1. Mostrar mensaje del usuario
+            chatBox.innerHTML += `<p class="user-message"><b>Tú:</b> ${userPrompt}</p>`;
+            chatBox.scrollTop = chatBox.scrollHeight; // Scroll al final
+            
+            inputMsg.value = "";
+            sendBtn.disabled = true; // Deshabilita el botón mientras espera la respuesta
+            inputMsg.placeholder = "Esperando respuesta...";
+
+            // Mostrar un indicador de carga (opcional)
+            let loadingMessage = document.createElement('p');
+            loadingMessage.innerHTML = '<b>Bot:</b> Escribiendo...';
+            loadingMessage.className = 'bot-message loading';
+            chatBox.appendChild(loadingMessage);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                // 2. Enviar petición a la API de Django /api/chatbot/
+                const response = await fetch('/api/chatbot/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken() // Token de seguridad de Django
+                    },
+                    body: JSON.stringify({
+                        prompt: userPrompt
+                    })
+                });
+
+                const data = await response.json();
+
+                // 3. Manejar la respuesta
+                chatBox.removeChild(loadingMessage); // Remover el indicador de carga
+
+                if (data.success) {
+                    // Reemplaza el texto "Escribiendo..." con la respuesta real
+                    chatBox.innerHTML += `<p class="bot-message"><b>Bot:</b> ${data.response}</p>`;
+                } else {
+                    // Mostrar error si falla la API (ej. clave incorrecta, error interno)
+                    chatBox.innerHTML += `<p class="bot-message" style="background: darkred;"><b>Bot (Error):</b> ${data.error || 'Ocurrió un error inesperado.'}</p>`;
+                }
+
+            } catch (error) {
+                // Manejar errores de red
+                const currentLoading = chatBox.querySelector('.loading');
+                if (currentLoading) chatBox.removeChild(currentLoading);
+                
+                chatBox.innerHTML += `<p class="bot-message" style="background: darkred;"><b>Bot (Error):</b> No se pudo conectar con el servidor. Error de red.</p>`;
+                console.error('Error en la comunicación con la API:', error);
+            } finally {
+                // 4. Restaurar interfaz
+                sendBtn.disabled = false;
+                inputMsg.placeholder = "Escribe aquí...";
+                chatBox.scrollTop = chatBox.scrollHeight; // Scroll final
+            }
+        }
+
+        // Permitir enviar con Enter
+        document.getElementById("msg").addEventListener("keypress", function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Evitar salto de línea
+                responder();
+            }
+        });
+    </script>
+    
+</body>
+</html>

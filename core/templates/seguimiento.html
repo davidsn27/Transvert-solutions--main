@@ -1,0 +1,280 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Seguimiento de Envío - Transvert Solutions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* [ESTILOS EXISTENTES] */
+        .main-wrapper {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: row-reverse;
+        }
+
+        body {
+            background: #1b1f27;
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2a2f3a;
+            padding: 25px;
+            height: 100vh;
+            border-left: 2px solid rgba(0, 122, 204, 0.25);
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #0095FF;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #3a404d;
+            color: #ffffff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar a i {
+            margin-right: 8px;
+        }
+
+        .sidebar a:hover {
+            background: #0095FF;
+            color: #fff;
+            border-left: 4px solid #fff;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .card {
+            background: #f2f2f2;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.3);
+            color: #000;
+        }
+
+        .card h1, .card h2 {
+            color: #007ACC;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 2px solid #cfcfcf;
+            margin-bottom: 18px;
+            font-size: 15px;
+        }
+
+        button {
+            background: linear-gradient(90deg, #007ACC, #0095FF);
+            color: white;
+            padding: 14px;
+            font-size: 18px;
+            width: 100%;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: #000;
+        }
+
+        table th, table td {
+            padding: 14px;
+            border: 1px solid #cfcfcf;
+        }
+
+        table th {
+            background: #d9eaff;
+            font-weight: bold;
+            color: #003a70;
+        }
+        
+        /* [NUEVOS ESTILOS PARA LA TRAZABILIDAD] */
+        .tracking-timeline {
+            margin-top: 30px;
+            padding-left: 25px; /* Espacio para la línea */
+            border-left: 3px solid #007ACC;
+            position: relative;
+        }
+        
+        .tracking-event {
+            position: relative;
+            padding: 15px 15px 15px 25px;
+            background: #ffffff;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .tracking-event::before {
+            content: '';
+            position: absolute;
+            left: -33px; /* Alinea con la línea */
+            top: 20px;
+            width: 15px;
+            height: 15px;
+            background: #0095FF;
+            border: 3px solid #007ACC;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .tracking-event.final::before {
+            background: #28a745; /* Color verde para el evento final */
+            border-color: #1e7e34;
+        }
+        
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            color: #003a70;
+            margin-bottom: 5px;
+        }
+
+        .event-status {
+            font-size: 1.1em;
+        }
+
+        .event-date {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .event-location {
+            font-style: italic;
+            color: #777;
+            margin-top: 5px;
+        }
+        
+    </style>
+</head>
+
+<body>
+
+<div class="main-wrapper">
+
+    <div class="sidebar">
+        <h3>Transvert</h3>
+
+        <a href="{% url 'home' %}">
+            <i class="fas fa-home"></i> Inicio
+        </a>
+
+        <a href="{% url 'crear_envio' %}">
+            <i class="fas fa-plus-circle"></i> Crear Envío
+        </a>
+
+        <a href="/soporte/">
+            <i class="fas fa-headset"></i> Soporte
+        </a>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="main-content">
+        <div class="card">
+
+            <h1><i class="fas fa-search-location"></i> Seguimiento de Envío</h1>
+
+            <form method="get" action="{% url 'seguimiento_envio' %}">
+                <label><b>Número de Guía:</b></label>
+                <input type="text" name="numero_guia" required>
+                <button type="submit">
+                    <i class="fas fa-magnifying-glass"></i> Consultar
+                </button>
+            </form>
+
+            {% if envio %}
+                <h2><i class="fas fa-box-open"></i> Detalles del Envío</h2>
+
+                <table>
+                    <tr><th>Número</th><td>{{ envio.numero_guia }}</td></tr>
+                    <tr><th>Remitente</th><td>{{ envio.remitente_nombre }}</td></tr>
+                    <tr><th>Destinatario</th><td>{{ envio.destinatario_nombre }}</td></tr>
+                    <tr><th>Tipo</th><td>{{ envio.tipo_envio }}</td></tr>
+                    <tr><th>Peso</th><td>{{ envio.peso }}</td></tr>
+                    <tr><th>Dimensiones</th><td>{{ envio.dimensiones }}</td></tr>
+                    <tr><th>Origen</th><td>{{ envio.direccion_origen }}</td></tr>
+                    <tr><th>Destino</th><td>{{ envio.direccion_destino }}</td></tr>
+                    <tr><th>Estado Actual</th><td><b>{{ envio.estado }}</b></td></tr>
+                </table>
+
+                <h2 style="margin-top: 40px;"><i class="fas fa-list-ul"></i> Historial de Movimientos</h2>
+
+                {% if trazas %}
+                    <div class="tracking-timeline">
+                        {% for traza in trazas reversed %}
+                            <div class="tracking-event {% if forloop.first %}final{% endif %}">
+                                <div class="event-header">
+                                    <span class="event-status">{{ traza.estado_nuevo }}</span>
+                                    <span class="event-date">{{ traza.fecha_hora|date:"d M Y H:i" }}</span>
+                                </div>
+                                <p>{{ traza.descripcion }}</p>
+                                <p class="event-location"><i class="fas fa-map-marker-alt"></i> {{ traza.ubicacion }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p style="color: #555;">No se encontró historial de movimientos para esta guía.</p>
+                {% endif %}
+
+
+                {% if envio %}
+                <a href="{% url 'descargar_guia_pdf' envio.id %}" 
+                   style="margin-top:25px;display:inline-block;padding:12px 18px;
+                          background:#28a745;color:white;border-radius:8px;
+                          font-weight:bold;text-decoration:none;">
+                   📄 Descargar etiqueta en PDF
+                </a>
+                {% endif %}
+                
+
+            {% elif error %}
+                 <h2 style="color: #cc0000; margin-top: 20px;">Error:</h2>
+                 <p style="font-size: 1.1em; color: #cc0000;">{{ error }}</p>
+
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

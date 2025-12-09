@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Staff - Transvert Solutions</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body { background-color: #f5f6f8; }
+        header { background-color: #343a40; color: white; padding: 1rem 0; margin-bottom: 2rem; }
+        .panel-card { background: #fff; border-radius: 10px; padding: 1.8rem; box-shadow: 0 3px 8px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        nav a { margin-right: 1rem; }
+        textarea { resize: none; }
+    </style>
+</head>
+
+<body>
+
+<header class="container-fluid">
+    <div class="container d-flex justify-content-between align-items-center">
+        <h3 class="m-0">Panel Staff</h3>
+        <div>
+            <a href="{% url 'home' %}" class="btn btn-secondary btn-sm">Home</a>
+            <a href="{% url 'crear_envio' %}" class="btn btn-primary btn-sm">Crear Envío</a>
+            <a href="{% url 'seguimiento_envio' %}" class="btn btn-info btn-sm">Seguimiento</a>
+            <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">Cerrar Sesión</a>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- FILTROS ENVÍOS -->
+    <div class="panel-card">
+        <h4>Envíos Recientes</h4>
+        <form method="GET" class="form-inline mb-3">
+            <label class="mr-2">Filtrar por estado:</label>
+            <select name="estado_envio" class="form-control mr-2">
+                <option value="">Todos</option>
+                <option value="Pendiente" {% if request.GET.estado_envio == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                <option value="En Proceso" {% if request.GET.estado_envio == 'En Proceso' %}selected{% endif %}>En Proceso</option>
+                <option value="Entregado" {% if request.GET.estado_envio == 'Entregado' %}selected{% endif %}>Entregado</option>
+            </select>
+            <button type="submit" class="btn btn-secondary btn-sm">Filtrar</button>
+        </form>
+
+        {% if envios %}
+            <table class="table table-bordered table-sm mt-3">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Guía</th>
+                        <th>Remitente</th>
+                        <th>Destinatario</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for envio in envios %}
+                        <tr>
+                            <td>{{ envio.numero_guia }}</td>
+                            <td>{{ envio.remitente_nombre }}</td>
+                            <td>{{ envio.destinatario_nombre }}</td>
+                            <td>{{ envio.estado }}</td>
+                            <td>
+                                <form method="POST" action="{% url 'actualizar_estado_envio' %}" style="display:inline-block;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="envio_id" value="{{ envio.id }}">
+                                    <button name="nuevo_estado" value="Pendiente" class="btn btn-warning btn-sm">Pendiente</button>
+                                    <button name="nuevo_estado" value="En Proceso" class="btn btn-info btn-sm">En Proceso</button>
+                                    <button name="nuevo_estado" value="Entregado" class="btn btn-success btn-sm">Entregado</button>
+                                </form>
+                                <a href="{% url 'descargar_guia_pdf' envio.id %}" class="btn btn-secondary btn-sm mt-1">Descargar Guía</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No hay envíos registrados.</p>
+        {% endif %}
+    </div>
+
+    <!-- FILTROS TICKETS -->
+    <div class="panel-card">
+        <h4>Soporte - Tickets</h4>
+        <form method="GET" class="form-inline mb-3">
+            <label class="mr-2">Filtrar por estado:</label>
+            <select name="estado_ticket" class="form-control mr-2">
+                <option value="">Todos</option>
+                <option value="Pendiente" {% if request.GET.estado_ticket == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                <option value="En Proceso" {% if request.GET.estado_ticket == 'En Proceso' %}selected{% endif %}>En Proceso</option>
+                <option value="Resuelto" {% if request.GET.estado_ticket == 'Resuelto' %}selected{% endif %}>Resuelto</option>
+            </select>
+            <button type="submit" class="btn btn-secondary btn-sm">Filtrar</button>
+        </form>
+
+        {% if tickets %}
+            <table class="table table-bordered table-sm mt-3">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Asunto</th>
+                        <th>Mensaje</th>
+                        <th>Estado / Responder</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                        <tr>
+                            <td>{{ ticket.usuario.username }}</td>
+                            <td>{{ ticket.asunto }}</td>
+                            <td>{{ ticket.descripcion }}</td>
+                            <td>
+                                <form method="POST" action="{% url 'responder_ticket' ticket.id %}">
+                                    {% csrf_token %}
+                                    <textarea name="mensaje" class="form-control mb-1" rows="2" placeholder="Escribe tu respuesta aquí..."></textarea>
+                                    <select name="estado" class="form-control form-control-sm mb-1">
+                                        <option value="Pendiente" {% if ticket.estado == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                                        <option value="En Proceso" {% if ticket.estado == 'En Proceso' %}selected{% endif %}>En Proceso</option>
+                                        <option value="Resuelto" {% if ticket.estado == 'Resuelto' %}selected{% endif %}>Resuelto</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary btn-sm">Enviar ✅</button>
+                                </form>
+
+                                {% for resp in ticket.soporterespuesta_set.all %}
+                                    <div class="alert alert-success mt-2">
+                                        <b>{{ resp.usuario.username }}:</b> {{ resp.mensaje }}
+                                    </div>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No hay tickets registrados.</p>
+        {% endif %}
+    </div>
+
+</main>
+
+<footer class="container-fluid bg-dark text-white text-center py-3">
+    &copy; 2025 Transvert Solutions
+</footer>
+
+</body>
+</html>

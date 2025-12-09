@@ -1,0 +1,328 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transvert Solutions - Envíos Rápidos y Seguros en Colombia</title>
+    <meta name="description" content="Transvert Solutions: Envíos rápidos, seguros y confiables en toda Colombia. Regístrate y experimenta la mejor solución logística.">
+
+    
+
+    <style>
+        :root {
+            --primary: #1f2937;      /* gris oscuro azulado */
+            --accent: #2563eb;       /* azul corporativo */
+            --light: #f3f4f6;
+            --dark: #111827;
+            --softgray: #e5e7eb;
+        }
+        
+        /* --- BODY GENERAL --- */
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* --- CABECERA CORPORATIVA --- */
+        .corporate-header {
+            background: var(--dark);
+            color: white;
+            padding: 35px 0;
+            text-align: center;
+            font-size: 38px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+        }
+        
+        /* --- MENÚ DE USUARIO (MODERNO Y GRANDE) --- */
+        .user-menu-container {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+        
+        .user-btn {
+            background: var(--primary);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 1px solid #4b5563;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        
+        .user-btn:hover {
+            background: #374151;
+        }
+        
+        /* SUBMENÚ */
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            margin-top: 16px;
+            background: var(--primary);
+            padding: 18px;
+            border-radius: 12px;
+            width: 260px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+        }
+        
+        .user-dropdown a {
+            display: block;
+            color: white;
+            padding: 14px;
+            border-bottom: 1px solid #374151;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+        }
+        
+        .user-dropdown a:hover {
+            background: #374151;
+        }
+        
+        .user-dropdown.show {
+            display: block;
+        }
+        
+        /* --- HERO PRINCIPAL --- */
+        .hero {
+            background: linear-gradient(rgba(17,24,39,0.75), rgba(17,24,39,0.75)), url('{% static "hero-bg.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            padding: 150px 20px;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: auto;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .hero .btn {
+            background: #fff;
+            color: var(--primary);
+            padding: 16px 28px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        
+        .hero .btn:hover {
+            background: var(--softgray);
+        }
+        
+        /* --- SECCIONES DE SERVICIOS --- */
+        .features {
+            padding: 70px 0;
+            text-align: center;
+        }
+        
+        .feature-item {
+            background: white;
+            border-radius: 14px;
+            padding: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 35px;
+            transition: 0.2s;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-item i {
+            font-size: 55px;
+            color: var(--accent);
+            margin-bottom: 18px;
+        }
+        
+        .feature-item h3 {
+            font-size: 24px;
+            font-weight: bold;
+            padding-bottom: 10px;
+        }
+        
+        /* --- TESTIMONIOS --- */
+        .testimonials {
+            padding: 70px 0;
+            background: #f9fafb;
+            text-align: center;
+        }
+        
+        .testimonial-item {
+            background: white;
+            border-radius: 14px;
+            padding: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 35px;
+        }
+        
+        .testimonial-item img {
+            width: 95px;
+            height: 95px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+        
+        /* --- VIDEO --- */
+        .video-section {
+            padding: 70px 0;
+            text-align: center;
+        }
+        
+        /* --- FOOTER --- */
+        .footer {
+            background: var(--dark);
+            color: #e5e7eb;
+            text-align: center;
+            padding: 30px;
+            font-size: 16px;
+            margin-top: 40px;
+        }
+        
+    </style>
+</head>
+
+<body>
+
+<!-- SUBMENÚ -->
+<div class="user-menu-container">
+    <button class="user-btn" onclick="toggleUserMenu()">
+        👤 Cuenta
+    </button>
+
+    <div class="user-dropdown" id="userDropdown">
+        <a href="{% url 'login' %}">🔐 Iniciar sesión</a>
+        <a href="{% url 'register' %}">📝 Registrarse</a>
+        <a href="{% url 'contact' %}"> 💬 Acerca</a>
+    </div>
+</div>
+
+<!-- CABECERA -->
+<div class="corporate-header">
+    TRANSVERT SOLUTIONS
+</div>
+
+<!-- HERO -->
+<section class="hero">
+    <h2>Conectamos Colombia con velocidad y confianza</h2>
+    <p>Tu envío, nuestro compromiso. Solución logística profesional para tu negocio y tus clientes.</p>
+
+    <a href="{% url 'register' %}" class="btn">
+        🚀 Regístrate con 10% de descuento
+    </a>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="feature-item">
+                    <i class="fas fa-shipping-fast"></i>
+                    <h3>Envíos Rápidos</h3>
+                    <p>Entregas en tiempo récord a nivel nacional.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-item">
+                    <i class="fas fa-lock"></i>
+                    <h3>Seguridad Garantizada</h3>
+                    <p>Protección total de tus paquetes y documentos.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-item">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>Cobertura Nacional</h3>
+                    <p>Llegamos a cualquier municipio de Colombia.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="testimonials">
+    <div class="container">
+        <h2>Lo que dicen nuestros clientes</h2>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="testimonial-item">
+                    <img src="{% static 'testimonio1.jpg' %}" alt="Cliente">
+                    <p>"Transvert Solutions ha sido clave para mi negocio."</p>
+                    <strong>Juan Pérez - Bogotá</strong>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="testimonial-item">
+                    <img src="{% static 'testimonio2.jpg' %}" alt="Cliente 2">
+                    <p>"Puedo enviar productos a cualquier lugar del país."</p>
+                    <strong>María Gómez - Medellín</strong>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="testimonial-item">
+                    <img src="{% static 'testimonio3.jpg' %}" alt="Cliente 3">
+                    <p>"La atención al cliente es excelente."</p>
+                    <strong>Carlos Rodríguez - Cali</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- VIDEO -->
+<section class="video-section">
+    <h2>Descubre cómo optimizamos tu logística</h2>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    © {{ year|date:"Y"|default:"2025" }} Transvert Solutions · Colombia
+</footer>
+
+<script>
+    function toggleUserMenu() {
+        document.getElementById("userDropdown").classList.toggle("show");
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.matches('.user-btn')) {
+            var dropdown = document.getElementById("userDropdown");
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

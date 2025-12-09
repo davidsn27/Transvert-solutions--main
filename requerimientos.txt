@@ -1,0 +1,11 @@
+Django>=5.0
+gunicorn
+mysqlclient
+python-dotenv
+whitenoise
+requests
+pillow
+djangorestframework
+django-cors-headers
+qrcode[pil]
+google-generativeai

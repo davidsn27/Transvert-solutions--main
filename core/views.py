@@ -267,7 +267,7 @@ def crear_ticket(request):
         )
         messages.success(request, "✅ Ticket creado correctamente.")
         return redirect("crear_ticket")
-    return render(request, "crear_ticket.html")
+    return render(request, "soporte.html")
 
 
 @login_required

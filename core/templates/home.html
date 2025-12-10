@@ -114,82 +114,62 @@
             }
         }
         
-        /* --- ESTILOS DEL CHATBOT --- */
-        #chatbot {
-            position:fixed;
-            bottom:20px;
-            right:20px;
-            background:#112d4e;
-            padding:15px;
-            border-radius:12px;
-            width:280px; /* Un poco más ancho */
-            color:white;
-            box-shadow:0 0 15px rgba(0,0,0,0.5);
-            z-index: 990; /* Para que quede debajo del menú desplegable */
-        }
+        /* Contenedor del botón flotante + ventana */
+#chatbot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 980;
+}
 
-        #chat {
-            height:250px; /* Más alto para ver el historial */
-            overflow-y:auto;
-            overflow-x:hidden;
-            margin-bottom:10px;
-            padding: 5px;
-            border: 1px solid #374151;
-            border-radius: 5px;
-            background: #1f2937;
-            font-size: 14px;
-        }
-        
-        #chat p {
-            margin: 4px 0;
-            padding: 5px;
-            border-radius: 5px;
-        }
+/* Botón flotante (icono ayuda) */
+#chat-toggle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4);
+    cursor: pointer;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        #chat b {
-            font-weight: bold;
-        }
+/* Ventana del chat (oculta por defecto) */
+#chat-window {
+    display: none;
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    background: #112d4e;
+    padding: 15px;
+    border-radius: 12px;
+    width: 280px;
+    color: white;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
 
-        #chat .user-message {
-            text-align: right;
-            background-color: #3b82f6; /* Azul */
-            color: white;
-            margin-left: 20%;
-        }
-
-        #chat .bot-message {
-            text-align: left;
-            background-color: #4b5563; /* Gris */
-            color: white;
-            margin-right: 20%;
-        }
-
-        #msg {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            box-sizing: border-box;
-            background: white;
-            color: #111827;
-        }
-
-        #send-btn {
-            width: 100%;
-            margin-top: 10px;
-            padding: 10px;
-            background: #3b82f6; /* Azul */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-
-        #send-btn:hover {
-            background: #2563eb;
-        }
+/* Lo demás igual que ya tienes */
+#chat {
+    height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid #374151;
+    border-radius: 5px;
+    background: #1f2937;
+    font-size: 14px;
+}
+#chat p { margin: 4px 0; padding: 5px; border-radius: 5px; }
+#chat .user-message { text-align: right; background-color: #3b82f6; color: white; margin-left: 20%; }
+#chat .bot-message { text-align: left; background-color: #4b5563; color: white; margin-right: 20%; }
+#msg { width: 100%; padding: 10px; border: none; border-radius: 5px; box-sizing: border-box; background: white; color: #111827; }
+#send-btn { width: 100%; margin-top: 10px; padding: 10px; background: #3b82f6; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+#send-btn:hover { background: #2563eb; }
         /* Ajustes del menú en pantallas pequeñas */
 @media (max-width: 768px) {
     .corporate-header {
@@ -301,11 +281,19 @@
     </main>
 
     <div id="chatbot">
+    <!-- Botón flotante -->
+    <button id="chat-toggle" onclick="toggleChat()">
+        ?
+    </button>
+
+    <!-- Ventana del chat -->
+    <div id="chat-window">
         <div id="chat">
             <p class="bot-message"><b>Bot:</b> ¡Hola! Soy el asistente de Transvert Solutions. ¿En qué puedo ayudarte hoy?</p>
         </div>
         <input id="msg" placeholder="Escribe aquí..." onkeypress="if(event.key === 'Enter') responder()">
         <button id="send-btn" onclick="responder()">Enviar</button>
+    </div>
     </div>
 
     <script>
@@ -403,6 +391,15 @@
             }
         });
     </script>
-    
+    <script>
+    function toggleChat() {
+    const win = document.getElementById('chat-window');
+    if (win.style.display === 'block') {
+        win.style.display = 'none';
+    } else {
+        win.style.display = 'block';
+    }
+}
+    </script>
 </body>
 </html>

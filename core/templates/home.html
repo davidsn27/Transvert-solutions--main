@@ -190,6 +190,47 @@
         #send-btn:hover {
             background: #2563eb;
         }
+        /* Ajustes del menú en pantallas pequeñas */
+@media (max-width: 768px) {
+    .corporate-header {
+        font-size: 26px;
+        padding: 20px;
+    }
+
+    .user-menu-container {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+    }
+
+    .user-btn {
+        padding: 8px 14px;
+        font-size: 14px;
+        border-radius: 8px;
+    }
+
+    .user-dropdown {
+        width: 200px;
+        padding: 10px;
+        margin-top: 8px;
+    }
+
+    .user-dropdown a {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    main {
+        margin: 80px auto 20px; /* deja espacio para el botón fijo arriba */
+        padding: 15px;
+        grid-template-columns: 1fr; /* una columna en móvil */
+        gap: 20px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+}
     </style>
 </head>
 
